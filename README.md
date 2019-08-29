@@ -17,4 +17,4 @@ Python3, Pytorch1.0, tqdm, boto3, requests
 
 ## Disclamer
 
-Since the source of Cosmos QA is from personal webblogs, they may contain offensive or inappropriate content. 
+* Since the source of Cosmos QA is from personal webblogs, they may contain offensive or inappropriate content. 
