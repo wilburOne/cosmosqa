@@ -5,7 +5,7 @@ This repository includes the source code and data for Cosmos QA.
 ## Project Page and Leaderboard
 
 * Please refer detailed examples, resources, as well as a leaderboard in our project page: [Project Page](https://wilburone.github.io/cosmos)
-* To measure the performance of your system or create a submission to our leaderboard, please refer to [Leaderboard](https://wilburone.github.io/cosmos) for detailed instructions and policies.
+* To measure the performance of your system or create a submission to our leaderboard, please refer to [Leaderboard](https://leaderboard.staging.apps.allenai.org/cosmosqa/submissions/public) for detailed instructions and policies.
 
 ## Repo Details
 
