@@ -32,7 +32,6 @@ from torch.utils.data import TensorDataset, DataLoader, RandomSampler, Sequentia
 from torch.utils.data.distributed import DistributedSampler
 
 from tokenization import BertTokenizer
-from modeling import BertForSequenceClassification
 from optimization import BertAdam
 from file_utils import PYTORCH_PRETRAINED_BERT_CACHE
 from modeling import BertMultiwayMatch
@@ -43,7 +42,7 @@ logging.basicConfig(format='%(asctime)s - %(levelname)s - %(name)s -   %(message
 logger = logging.getLogger(__name__)
 
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
-os.environ["CUDA_VISIBLE_DEVICES"] = "0, 1"
+os.environ["CUDA_VISIBLE_DEVICES"] = "2, 3"
 
 
 class SwagExample(object):
@@ -228,17 +227,17 @@ class CommonsenseQaProcessor(DataProcessor):
         """See base class."""
         return ["0", "1", "2", "3"]
 
-    def _create_examples(self, records):
+    def _create_examples(self, records, set_type):
         """Creates examples for the training and dev sets."""
         examples = []
         for (i, record) in enumerate(records):
             guid = record["id"]
             context = record["context"]
             question = record["question"]
-            answer1 = record["answer1"]
-            answer2 = record["answer2"]
-            answer3 = record["answer3"]
-            answer4 = record["answer4"]
+            answer1 = record["answer0"]
+            answer2 = record["answer1"]
+            answer3 = record["answer2"]
+            answer4 = record["answer3"]
             label = record["label"]
 
             examples.append(
@@ -323,7 +322,8 @@ def convert_examples_to_features(examples, tokenizer, max_seq_length,
         if example_index < 5:
             logger.info("*** Example ***")
             logger.info(f"swag_id: {example.swag_id}")
-            for choice_idx, (tokens, input_ids, input_mask, segment_ids) in enumerate(choices_features):
+            for choice_idx, (tokens, input_ids, input_mask, segment_ids, doc_len,
+                             ques_len, option_len) in enumerate(choices_features):
                 logger.info(f"choice: {choice_idx}")
                 logger.info(f"tokens: {' '.join(tokens)}")
                 logger.info(f"input_ids: {' '.join(map(str, input_ids))}")
@@ -479,16 +479,10 @@ def main():
     args = parser.parse_args()
 
     processors = {
-        "cola": ColaProcessor,
-        "mnli": MnliProcessor,
-        "mrpc": MrpcProcessor,
         "commonsenseqa": CommonsenseQaProcessor,
     }
 
     num_labels_task = {
-        "cola": 2,
-        "mnli": 3,
-        "mrpc": 2,
         "commonsenseqa":4,
     }
 
@@ -735,7 +729,7 @@ def main():
     model.to(device)
 
     if args.do_eval and (args.local_rank == -1 or torch.distributed.get_rank() == 0):
-        eval_examples = processor.get_test_examples(args.data_dir)
+        eval_examples = processor.get_dev_examples(args.data_dir)
         eval_features = convert_examples_to_features(eval_examples, tokenizer,
                                                      args.max_seq_length, True)
         logger.info("***** Running evaluation *****")
