@@ -10,7 +10,7 @@ This repository includes the source code and data for Cosmos QA.
 ## Repo Details
 
 * The training/dev/test datasets for Cosmos QA can be found in ```data/```
-* The BERT with multiway attention model can be ran and tuned with ```grid_search.sh```
+* The BERT with multiway attention model can be ran and tuned with ```grid_search.sh```. We also released the model file that we used in our paper for BERT multiway attention model [Here](https://drive.google.com/open?id=18g8vRa_VqNvACF4BPJXQ-wmdLxWaRvNi)
 
 ## Requirements
 
